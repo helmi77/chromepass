@@ -1,0 +1,9 @@
+{
+    "name": "Chromepass",
+    "version": "0.1",
+    "description": "Keepass extension for Google Chrome",
+    "browser_action": {
+      "default_popup": "index.html"
+    },
+    "manifest_version": 2
+  }

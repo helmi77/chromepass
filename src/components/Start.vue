@@ -10,6 +10,15 @@
 
         <label for="password" class="label mt-3">Password</label>
         <input type="password" id="password" placeholder="Your password" class="w-full input" v-model="password">
+
+        <label class="label mt-3">Keyfile</label>
+        <input id="keyfile" type="file" @change="keySelected" class="hidden">
+        <label for="keyfile" class="block btn btn-blue">
+            <font-awesome-icon icon="upload" class="icon mr-2"></font-awesome-icon>
+            <span v-show="!selectedKey.name">Choose a key file</span>
+            <span v-show="selectedKey.name">{{ selectedKey.name }}</span>
+        </label>
+
         <button type="submit" class="mt-6 btn btn-blue">
             <font-awesome-icon icon="unlock" class="icon mr-2"></font-awesome-icon>
             Open
@@ -24,12 +33,21 @@ export default {
             get () { return this.$store.state.keepass.file },
             set (value) { this.$store.commit('keepass/selectFile', value) }
         },
+        selectedKey: {
+            get () { return this.$store.state.keepass.keyFile },
+            set (value) { this.$store.commit('keepass/selectKey', value) }
+        },
         password: {
             get () { return this.$store.state.keepass.password },
             set (value) { this.$store.commit('keepass/setPassword', value) }
         }
     },
     methods: {
+        keySelected (event) {
+            if (event.target.files.length > 0) {
+                this.selectedKey = event.target.files[0]
+            }
+        },
         fileSelected (event) {
             if (event.target.files.length > 0) {
                 this.selectedFile = event.target.files[0]

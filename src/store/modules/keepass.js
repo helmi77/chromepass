@@ -2,8 +2,7 @@ import kdbxweb from 'kdbxweb'
 
 const getDefaultState = () => {
     return {
-        db: {},
-        file: { name: '' }, password: '',
+        db: {}, file: { name: '' }, keyFile: { name: '' }, password: '',
     }
 }
 
@@ -13,6 +12,9 @@ export default {
     mutations: {
         selectFile (state, file) {
             state.file = file
+        },
+        selectKey (state, keyFile) {
+            state.keyFile = keyFile
         },
         setPassword (state, password) {
             state.password = password
@@ -26,10 +28,15 @@ export default {
             if (state.file instanceof File === false)
                 return Promise.reject("No file was selected")
 
-            return state.file.arrayBuffer()
-                .then(buffer => {
-                    let credentials = new kdbxweb.Credentials(kdbxweb.ProtectedValue.fromString(state.password))
-                    return kdbxweb.Kdbx.load(buffer, credentials)
+            var keyFilePromise = Promise.resolve(null);
+            if (state.keyFile instanceof File) {
+                keyFilePromise = state.keyFile.arrayBuffer()
+            }
+
+            return Promise.all([state.file.arrayBuffer(), keyFilePromise])
+                .then(([dbBuffer, keyBuffer]) => {
+                    let credentials = new kdbxweb.Credentials(kdbxweb.ProtectedValue.fromString(state.password), keyBuffer)
+                    return kdbxweb.Kdbx.load(dbBuffer, credentials)
                 })
                 .then(db => {
                     commit('setDatabase', db)

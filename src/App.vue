@@ -1,13 +1,13 @@
 <template>
-    <div id="app">
-        <router-link :to="{ name: 'Start' }">Start</router-link>
-        <router-link :to="{ name: 'About' }">About</router-link>
-
+    <div id="app" class="p-4">
         <router-view>
         </router-view>
     </div>
 </template>
 
 <style lang="scss">
-@import "assets/styles/tailwind.css";
+@tailwind base;
+@tailwind components;
+@import "assets/styles/main.scss";
+@tailwind utilities;
 </style>

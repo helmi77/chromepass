@@ -1,5 +1,18 @@
 module.exports = {
   theme: {
+    fontSize: {
+        'xs': '.75rem',
+        'sm': '.775rem',
+        'base': '.8rem',
+        'lg': '1rem',
+        'xl': '1.15rem',
+        '2xl': '1.2rem',
+        '3xl': '1.575rem',
+        '4xl': '2rem',
+        '5xl': '2.25rem',
+        '6xl': '3rem',
+        '7xl': '4rem',
+    },
     extend: {
       boxShadow: {
         'outline-green': '0 0 0 3px rgba(68, 225, 66, .5)',

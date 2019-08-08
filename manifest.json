@@ -2,7 +2,7 @@
     "name": "Chromepass",
     "version": "0.1",
     "description": "Keepass extension for Google Chrome",
-    "permissions": ["contextMenus", "storage", "webNavigation"],
+    "permissions": ["contextMenus", "storage", "tabs", "webNavigation"],
     "background": {
         "scripts": ["scripts/background.js"]
     },

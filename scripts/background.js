@@ -9,15 +9,14 @@ const chromepassMenuItem = chrome.contextMenus.create({
     }
 });
 
-chrome.webNavigation.onCompleted.addListener(function (details) {
-    if (details.frameId !== 0) // Navigation did not happen in tab content window
-        return
-
+const removeContextMenu = () => {
     while (contextMenuIds.length > 0) {
         chrome.contextMenus.remove(contextMenuIds.pop())
     }
+}
 
-    const key = details.url
+const buildContextMenu = (tabId, url) => {
+    const key = url
     chrome.storage.local.get([key], result => {
         if (!(key in result))
             return
@@ -28,7 +27,7 @@ chrome.webNavigation.onCompleted.addListener(function (details) {
                 contexts: ["editable"],
                 parentId: parentContextId,
                 onclick: (info, tab) => {
-                    chrome.tabs.sendMessage(details.tabId, {
+                    chrome.tabs.sendMessage(tabId, {
                         type: 'fill',
                         password: entry.password
                     })
@@ -36,13 +35,23 @@ chrome.webNavigation.onCompleted.addListener(function (details) {
             }))
         })
     })
+}
 
-    /*
-    let key = 'https://keepass.info/'
-    chrome.storage.local.get([key], result => {
-        console.log("Retrieved from storage")
-        console.log(result[key])
-        console.log("Decrypted", CryptoJS.AES.decrypt(result[key], "secret").toString(CryptoJS.enc.Utf8))
-    })
-    */
+chrome.webNavigation.onCompleted.addListener(function (details) {
+    if (details.frameId !== 0) // Navigation did not happen in tab content window
+        return
+
+    removeContextMenu()
+    buildContextMenu(details.tabId, details.url)
+
+    //console.log("Decrypted", CryptoJS.AES.decrypt("UVAWDw=", "session key").toString(CryptoJS.enc.Utf8))
 });
+
+chrome.tabs.onActivated.addListener(activeInfo => {
+    removeContextMenu()
+    chrome.tabs.get(activeInfo.tabId, tab => {
+        if (tab.url) {
+            buildContextMenu(tab.id, tab.url)
+        }
+    })
+})

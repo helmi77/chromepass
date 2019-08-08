@@ -2,8 +2,18 @@
     "name": "Chromepass",
     "version": "0.1",
     "description": "Keepass extension for Google Chrome",
+    "permissions": ["contextMenus", "storage", "webNavigation"],
+    "background": {
+        "scripts": ["scripts/background.js"]
+    },
     "browser_action": {
       "default_popup": "index.html"
     },
+    "content_scripts": [
+        {
+          "matches": ["http://*/*", "https://*/*"],
+          "js": ["scripts/tracker.js"]
+        }
+      ],
     "manifest_version": 2
   }

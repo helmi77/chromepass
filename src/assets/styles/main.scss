@@ -4,6 +4,10 @@ body {
     min-width: 400px;
 }
 
+#app {
+    height: 100vh;
+}
+
 .btn {
     @apply appearance-none text-white px-4 py-2 font-bold rounded-sm cursor-pointer flex;
     &:focus {
@@ -31,5 +35,5 @@ body {
     @apply border-blue-400;
 }
 .label {
-    @apply flex text-sm font-bold;
+    @apply flex text-sm font-bold text-gray-800;
 }

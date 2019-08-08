@@ -1,6 +1,6 @@
 <template>
     <form @submit.prevent="submit" class="w-full">
-        <label class="label">Database</label>
+        <label class="label mb-1">Database</label>
         <input id="db" type="file" @change="fileSelected" class="hidden">
         <label for="db" class="block btn btn-blue">
             <font-awesome-icon icon="upload" class="icon mr-2"></font-awesome-icon>
@@ -8,10 +8,10 @@
             <span v-show="selectedFile.name">{{ selectedFile.name }}</span>
         </label>
 
-        <label for="password" class="label mt-3">Password</label>
+        <label for="password" class="label mb-1 mt-3">Password&nbsp;<em>(optional)</em></label>
         <input type="password" id="password" placeholder="Your password" class="w-full input" v-model="password">
 
-        <label class="label mt-3">Keyfile</label>
+        <label class="label mt-3 mb-1">Key file&nbsp;<em>(optional)</em></label>
         <input id="keyfile" type="file" @change="keySelected" class="hidden">
         <label for="keyfile" class="block btn btn-blue">
             <font-awesome-icon icon="upload" class="icon mr-2"></font-awesome-icon>
@@ -19,7 +19,7 @@
             <span v-show="selectedKey.name">{{ selectedKey.name }}</span>
         </label>
 
-        <button type="submit" class="mt-6 btn btn-blue">
+        <button type="submit" class="mt-6 mb-3 btn btn-blue">
             <font-awesome-icon icon="unlock" class="icon mr-2"></font-awesome-icon>
             Open
         </button>
@@ -55,15 +55,7 @@ export default {
         },
         submit () {
             this.$store.dispatch('keepass/loadDatabase')
-                .then(db => {
-                    db.groups.forEach(group => {
-                        console.log("Group", group.name)
-                        group.entries.forEach(entry => {
-                            console.log("Entry", entry.fields.Title)
-                            console.log(entry.fields.Password.getText())
-                        })
-                    });
-                })
+                .then(() => this.$router.push({ name: 'Session Key' }))
         }
     }
 }

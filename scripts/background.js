@@ -1,4 +1,5 @@
 const parentContextId = "parent"
+const contextMenuIds = []
 
 const chromepassMenuItem = chrome.contextMenus.create({
     id: parentContextId,
@@ -12,13 +13,17 @@ chrome.webNavigation.onCompleted.addListener(function (details) {
     if (details.frameId !== 0) // Navigation did not happen in tab content window
         return
 
+    while (contextMenuIds.length > 0) {
+        chrome.contextMenus.remove(contextMenuIds.pop())
+    }
+
     const key = details.url
     chrome.storage.local.get([key], result => {
         if (!(key in result))
             return
 
         result[key].forEach(entry => {
-            chrome.contextMenus.create({
+            contextMenuIds.push(chrome.contextMenus.create({
                 title: entry.title,
                 contexts: ["editable"],
                 parentId: parentContextId,
@@ -28,7 +33,7 @@ chrome.webNavigation.onCompleted.addListener(function (details) {
                         password: entry.password
                     })
                 }
-            })
+            }))
         })
     })
 
